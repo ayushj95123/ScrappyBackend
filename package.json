@@ -1,0 +1,22 @@
+{
+  "name": "scrappybackend",
+  "version": "1.0.0",
+  "description": "The Authentication and Backend APIs CRUD operations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayushj95123/ScrappyBackend.git"
+  },
+  "author": "Ayush Jain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ayushj95123/ScrappyBackend/issues"
+  },
+  "homepage": "https://github.com/ayushj95123/ScrappyBackend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
