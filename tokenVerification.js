@@ -2,8 +2,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Extract the token from the Authorization header
+    const token = req.headers['authorization']
   
     if (!token) {
       return res.status(401).json({ error: 'Access token is missing' });
@@ -16,6 +15,7 @@ function authenticateToken(req, res, next) {
       }
   
       // Attach the user object to the request for future use
+      console.log("Verified USer: ", user)
       req.user = user;
   
       // Token is valid, proceed to the next middleware or route handler

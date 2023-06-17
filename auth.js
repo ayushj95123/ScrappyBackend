@@ -4,11 +4,12 @@ const User = require('./User')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
+const mongo = require('mongoose');
 
 router.post('/register', async (req, res) => {
   console.log("Trying to register")
   try {
-    const { username, password } = req.body;
+    const { username, password, name, email, phoneNumber } = req.body;
 
     const existingUser = await User.findOne({ username });
     if (existingUser) {
@@ -19,16 +20,26 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = new User({
-      username,
+      username: username,
       password: hashedPassword,
+      name: name,
+      email: email,
+      phoneNumber: phoneNumber
     });
 
-    await newUser.save();
+    await newUser.save()
 
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     console.log("Registration Error: ", error)
-    res.status(500).json({ error: 'Internal server error' });
+    if (error instanceof mongo.Error.ValidationError) {
+      // Handle validation errors
+      res.status(401).json({ error: 'Validations failed '});
+    } else {
+      // Handle other errors
+      
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 });
 
@@ -40,6 +51,7 @@ router.post('/login', async (req, res) => {
 
     // Find the user
     const user = await User.findOne({ username });
+    console.log(user)
     if (!user) {
       return res.status(401).json({ error: 'Invalid username or password' });
     }
@@ -92,7 +104,7 @@ router.get('/', async (req, res) => {
 });
 
 function generateAccessToken(user) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' });
 }
 
 function generateRefreshToken(user) {
